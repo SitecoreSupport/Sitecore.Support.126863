@@ -67,7 +67,16 @@ namespace Sitecore.Support.Resources.Media
 
           item.Editing.BeginEdit();
 
-          item.Name = itemName;
+          if (string.Equals(item.Name, itemName, StringComparison.InvariantCulture))
+          {
+            using (new SettingsSwitcher("AllowDuplicateItemNamesOnSameLevel", true.ToString()))
+            {
+              item.Name = itemName;
+            }
+          }
+
+          else
+            item.Name = itemName;
 
           //item.TemplateID = this.GetItemTemplate(filePath, options).ID;
           item.TemplateID = ((TemplateItem)GetItemTemplateMethod.Invoke(this, new object[] { filePath, options })).ID;
